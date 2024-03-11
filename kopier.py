@@ -7,18 +7,9 @@ def on_button_click():
     source_path = source_entry.get()
     target_path = target_entry.get()
     parameters = ""
-    if subdirectories_var.get():
-        parameters += "/s "
-    if empty_subdirectories_var.get():
-        parameters += "/e "
-    if restartable_mode_var.get():
-        parameters += "/z "
-    if backup_mode_var.get():
-        parameters += "/b "
-    if unbuffered_mode_var.get():
-        parameters += "/j "
-    if efsraw_mode_var.get():
-        parameters += "/efsraw "
+    for option, var in options.items():
+        if var.get():
+            parameters += option + " "
     command = f"robocopy {parameters}{source_path} {target_path}"
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -56,23 +47,18 @@ root = tk.Tk()
 root.title("Kopier v.0.0.0.3-ALPHA")
 root.geometry("519x241")
 
-source_label = tk.Label(root, text="Source:")
-source_label.grid(row=0, column=0, padx=10)
+tk.Label(root, text="Source:").grid(row=0, column=0, padx=10)
+tk.Label(root, text="Target:").grid(row=1, column=0, pady=10)
 
 source_entry = tk.Entry(root, width=50)
 source_entry.grid(row=0, column=1, padx=5)
-
-source_button = tk.Button(root, text="Browse", command=browse_source)
-source_button.grid(row=0, column=2, padx=5)
-
-target_label = tk.Label(root, text="Target:")
-target_label.grid(row=1, column=0, pady=10)
+tk.Button(root, text="Browse", command=lambda: browse(source_entry)).grid(row=0, column=2, padx=5)
 
 target_entry = tk.Entry(root, width=50)
 target_entry.grid(row=1, column=1, padx=5)
+tk.Button(root, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5)
 
-target_button = tk.Button(root, text="Copy Files", command=on_button_click)
-target_button.grid(row=4, column=1, pady=10)
+target_button = tk.Button(root, text="Copy Files", command=copy_files).grid(row=4, column=1, pady=10)
 
 output_text = tk.Text(root, height=70, width=70)
 output_text.grid(row=5, columnspan=3, pady=10)
@@ -104,5 +90,27 @@ unbuffered_mode_checkbox.grid(row=3, column=1)
 
 efsraw_mode_checkbox = tk.Checkbutton(root, text="EFS RAW Mode", variable=efsraw_mode_var)
 efsraw_mode_checkbox.grid(row=3, column=2)
+
+options = {
+    "/s": tk.BooleanVar(),
+    "/e": tk.BooleanVar(),
+    "/z": tk.BooleanVar(),
+    "/b": tk.BooleanVar(),
+    "/j": tk.BooleanVar(),
+    "/efsraw": tk.BooleanVar()
+}
+
+checkboxes = {
+    ("Copy Subdirectories", "/s"),
+    ("Copy empty Subdirectories", "/e"),
+    ("Restartable mode", "/z"),
+    ("Backup mode", "/b"),
+    ("Unbuffered Mode (Large Files)", "/j"),
+    ("EFS RAW Mode", "/efsraw"),
+}
+
+for i, (text, option) in enumerate(checkboxes):
+    checkbox = create_checkbox(root, text, optipns[option])
+    checkbox.grid(row=2 + i//3, column=i%3)
 
 root.mainloop()
