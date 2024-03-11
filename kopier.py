@@ -51,26 +51,21 @@ def copy_files(source_path, target_path, subdirectories, empty_directories, rest
 
 
 def create_robocopy_window(window):
+    window.resizable(False, False)
     global output_text
-    tk.Label(window, text="Source:").grid(row=0, column=0, padx=10)
-    tk.Label(window, text="Target:").grid(row=1, column=0, pady=10)
+    tk.Label(window, text="Source:").grid(row=0, column=0, padx=10, sticky=tk.W)
+    tk.Label(window, text="Target:").grid(row=1, column=0, pady=10, sticky=tk.W)
 
     source_entry = tk.Entry(window, width=50)
-    source_entry.grid(row=0, column=1, padx=5)
-    tk.Button(window, text="Browse", command=lambda: browse(source_entry)).grid(row=0, column=2, padx=5)
+    source_entry.grid(row=0, column=1, padx=5, pady=5)  # Adjusted padding
+    tk.Button(window, text="Browse", command=lambda: browse(source_entry)).grid(row=0, column=2, padx=5, pady=5)  # Adjusted padding
 
     target_entry = tk.Entry(window, width=50)
-    target_entry.grid(row=1, column=1, padx=5)
-    tk.Button(window, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5)
-
-    target_button = tk.Button(window, text="Copy Files", command=lambda: copy_files(source_entry.get(), target_entry.get(), subdirectories_var.get(), empty_subdirectories_var.get(), restartable_mode_var.get(), backup_mode_var.get(), unbuffered_mode_var.get(), efsraw_mode_var.get()))
-    target_button.grid(row=3, columnspan=3, pady=10)
+    target_entry.grid(row=1, column=1, padx=5, pady=5)  # Adjusted padding
+    tk.Button(window, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5, pady=5)  # Adjusted padding
 
     output_text = tk.Text(window, height=10, width=50)
-    output_text.grid(row=4, columnspan=3, pady=10)
-
-    source_entry.bind("<Control-KeyRelease-a>", select_all)
-    target_entry.bind("<Control-KeyRelease-a>", select_all)
+    output_text.grid(row=2, columnspan=3, pady=(10, 0))  # Added top padding
 
     global subdirectories_var, empty_subdirectories_var, restartable_mode_var, backup_mode_var, unbuffered_mode_var, efsraw_mode_var
 
@@ -99,9 +94,18 @@ def create_robocopy_window(window):
         ("EFS RAW Mode", "/efsraw"),
     }
 
-    for i, (text, option) in enumerate(checkboxes):
+    num_columns = 2  # Number of columns for checkboxes
+    row = 3
+    column = 0
+    for text, option in checkboxes:
         checkbox = create_checkbox(window, text, options[option])
-        checkbox.grid(row=2 + i//3, column=i%2)
+        checkbox.grid(row=row, column=column, sticky=tk.W, padx=10, pady=5)  # Adjusted padding
+        column += 1
+        if column >= num_columns:
+            column = 0
+            row += 1
+
+    tk.Button(window, text="Copy Files", command=lambda: copy_files(source_entry.get(), target_entry.get(), subdirectories_var.get(), empty_subdirectories_var.get(), restartable_mode_var.get(), backup_mode_var.get(), unbuffered_mode_var.get(), efsraw_mode_var.get())).grid(row=row, columnspan=2, pady=10)
 
 
 def select_all(event):
