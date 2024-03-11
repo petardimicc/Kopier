@@ -69,7 +69,8 @@ target_entry = tk.Entry(root, width=50)
 target_entry.grid(row=1, column=1, padx=5)
 tk.Button(root, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5)
 
-target_button = tk.Button(root, text="Copy Files", command=copy_files).grid(row=4, column=1, pady=10)
+target_button = tk.Button(root, text="Copy Files", command=copy_files)
+target_button.grid(row=4, column=1, pady=10)
 
 output_text = tk.Text(root, height=70, width=70)
 output_text.grid(row=5, columnspan=3, pady=10)
@@ -83,24 +84,6 @@ restartable_mode_var = tk.BooleanVar()
 backup_mode_var = tk.BooleanVar()
 unbuffered_mode_var = tk.BooleanVar()
 efsraw_mode_var = tk.BooleanVar()
-
-subdirectories_checkbox = tk.Checkbutton(root, text="Copy Subdirectories", variable=subdirectories_var)
-subdirectories_checkbox.grid(row=2, column=0)
-
-empty_subdirectories_checkbox = tk.Checkbutton(root, text="Copy empty subdirectories", variable=empty_subdirectories_var)
-empty_subdirectories_checkbox.grid(row=2, column=1)
-
-restartable_mode_checkbox = tk.Checkbutton(root, text="Restartable mode", variable=restartable_mode_var)
-restartable_mode_checkbox.grid(row=2, column=2)
-
-backup_mode_checkbox = tk.Checkbutton(root, text="Backup mode", variable=backup_mode_var)
-backup_mode_checkbox.grid(row=3, column=0)
-
-unbuffered_mode_checkbox = tk.Checkbutton(root, text="Unbuffered Mode (Large Files)", variable=unbuffered_mode_var)
-unbuffered_mode_checkbox.grid(row=3, column=1)
-
-efsraw_mode_checkbox = tk.Checkbutton(root, text="EFS RAW Mode", variable=efsraw_mode_var)
-efsraw_mode_checkbox.grid(row=3, column=2)
 
 options = {
     "/s": tk.BooleanVar(),
