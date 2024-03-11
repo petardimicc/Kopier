@@ -1,4 +1,4 @@
-# Kopier v.0.0.0.5-ALPHA
+# Kopier v.0.0.0.7-ALPHA
 
 Kopier is a lightweight utility designed to facilitate the seamless copying of folders from one location to another using the robust functionality of robocopy.
 
