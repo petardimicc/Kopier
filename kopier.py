@@ -13,10 +13,12 @@ def copy_files():
     command = f"robocopy {parameters}{source_path} {target_path}"
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        output = result.stdout + result.stderr
         if result.returncode == 0:
             output_text.insert(tk.END, f"Files copied successfully from {source_path} to {target_path}.")
         else:
             output_text.insert(tk.END, f"Failed to copy files from {source_path} to {target_path}.")
+        output_text.insert(tk.END, output)
     except Exception as e:
         messagebox.showerror("Error?", str(e))
 
@@ -57,7 +59,7 @@ def create_checkbox(root, text, var):
 root = tk.Tk()
 root.title("Kopier v.0.0.0.4-ALPHA")
 root.geometry("700x241")
-root.resizable(False, False)
+root.resizable(False, True)
 
 tk.Label(root, text="Source:").grid(row=0, column=0, padx=10)
 tk.Label(root, text="Target:").grid(row=1, column=0, pady=10)
