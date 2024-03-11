@@ -22,8 +22,8 @@ def open_window(method):
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.title("Kopier v.0.0.0.4-ALPHA")
-    root.geometry("400x400")
+    root.title("Kopier v.0.0.0.7-ALPHA")
+    root.geometry("200x200")
     root.resizable(False, False)
 
     options_frame = ttk.LabelFrame(root, text="Select Transfer Method")
