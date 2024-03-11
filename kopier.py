@@ -110,7 +110,7 @@ checkboxes = {
 }
 
 for i, (text, option) in enumerate(checkboxes):
-    checkbox = create_checkbox(root, text, optipns[option])
+    checkbox = create_checkbox(root, text, options[option])
     checkbox.grid(row=2 + i//3, column=i%3)
 
 root.mainloop()
