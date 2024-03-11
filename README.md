@@ -8,7 +8,7 @@ Small tool that uses robocopy for now to utilize copy of folder from one locatio
 2. Support for SSH/SFTP
 3. Modern UI
 4. Multithreading
-5. Support windows portable .exe
+5. Support windows portable .exe (this is main focus now)
 
 This code will probably be bad, since I'm still learning python, don't hate, suggest.
 
