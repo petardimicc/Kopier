@@ -19,32 +19,20 @@ def open_window(method):
         create_dd_window(new_window)
 
 
-def create_scp_window(window):
-    pass
-
-
-def create_robocopy_window(window):
-    pass
-
-
-def create_adcpmv_window(window):
-    pass
-
-
-def create_rsync_window(window):
-    pass
-
-def create_dd_window(window):
-    pass
-
-
-def copy_files():
-    source_path = source_entry.get()
-    target_path = target_entry.get()
+def copy_files(source_path, target_path, subdirectories, empty_directories, restartable_mode, backup_mode, unbuffered_mode, efsraw_mode):
     parameters = ""
-    for option, var in options.items():
-        if var.get():
-            parameters += option + " "
+    if subdirectories:
+        parameters += "/s "
+    if empty_directories:
+        parameters += "/e "
+    if restartable_mode:
+        parameters += "/z "
+    if backup_mode:
+        parameters += "/b "
+    if unbuffered_mode:
+        parameters += "/j "
+    if efsraw_mode:
+        parameters += "/efsraw "
     command = f"robocopy {parameters}{source_path} {target_path}"
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -56,6 +44,63 @@ def copy_files():
         output_text.insert(tk.END, output)
     except Exception as e:
         messagebox.showerror("Error?", str(e))
+
+
+def create_robocopy_window(window):
+    tk.Label(window, text="Source:").grid(row=0, column=0, padx=10)
+    tk.Label(window, text="Target:").grid(row=1, column=0, pady=10)
+
+    source_entry = tk.Entry(window, width=50)
+    source_entry.grid(row=0, column=1, padx=5)
+    tk.Button(window, text="Browse", command=lambda: browse(source_entry)).grid(row=0, column=2, padx=5)
+
+    target_entry = tk.Entry(window, width=50)
+    target_entry.grid(row=1, column=1, padx=5)
+    tk.Button(window, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5)
+
+    output_text = tk.Text(window, height=10, width=50)
+    output_text.grid(row=4, columnspan=3, pady=10)
+
+    source_entry.bind("<Control-KeyRelease-a>", select_all)
+    target_entry.bind("<Control-KeyRelease-a>", select_all)
+
+    subdirectories_var = tk.BooleanVar()
+    empty_subdirectories_var = tk.BooleanVar()
+    restartable_mode_var = tk.BooleanVar()
+    backup_mode_var = tk.BooleanVar()
+    unbuffered_mode_var = tk.BooleanVar()
+    efsraw_mode_var = tk.BooleanVar()
+
+    options = {
+        "/s": subdirectories_var,
+        "/e": empty_subdirectories_var,
+        "/z": restartable_mode_var,
+        "/b": backup_mode_var,
+        "/j": unbuffered_mode_var,
+        "/efsraw": efsraw_mode_var
+    }
+
+    checkboxes = {
+        ("Copy Subdirectories", "/s"),
+        ("Copy empty Subdirectories", "/e"),
+        ("Restartable mode", "/z"),
+        ("Backup mode", "/b"),
+        ("Unbuffered Mode (Large Files)", "/j"),
+        ("EFS RAW Mode", "/efsraw"),
+    }
+
+    for i, (text, option) in enumerate(checkboxes):
+        checkbox = tk.Checkbutton(window, text=text, variable=options[option])
+        checkbox.grid(row=2 + i//3, column=i%2)
+
+    target_button = tk.Button(window, text="Copy Files", command=lambda: copy_files(
+        source_entry.get(), target_entry.get(),
+        subdirectories_var.get(), empty_subdirectories_var.get(),
+        restartable_mode_var.get(), backup_mode_var.get(),
+        unbuffered_mode_var.get(), efsraw_mode_var.get(),
+        output_text=output_text))
+    target_button.grid(row=3, columnspan=3, pady=10)
+
 
 
 def select_all(event):
@@ -91,58 +136,37 @@ def create_checkbox(root, text, var):
     return checkbox
 
 
+def create_scp_window(window):
+    pass
+
+
+def create_robocopy_window(window):
+    pass
+
+
+def create_adcpmv_window(window):
+    pass
+
+
+def create_rsync_window(window):
+    pass
+
+
+def create_dd_window(window):
+    pass
+
+
 root = tk.Tk()
 root.title("Kopier v.0.0.0.4-ALPHA")
-root.geometry("700x241")
-root.resizable(False, True)
+root.geometry("200x230")
+root.resizable(False, False)
 
-tk.Label(root, text="Source:").grid(row=0, column=0, padx=10)
-tk.Label(root, text="Target:").grid(row=1, column=0, pady=10)
+options_frame = ttk.LabelFrame(root, text="Select Transfer Method")
+options_frame.pack(pady=20)
 
-source_entry = tk.Entry(root, width=50)
-source_entry.grid(row=0, column=1, padx=5)
-tk.Button(root, text="Browse", command=lambda: browse(source_entry)).grid(row=0, column=2, padx=5)
+transfer_methods = ["SCP", "Robocopy", "DD", "adcpmv", "rsync"]
 
-target_entry = tk.Entry(root, width=50)
-target_entry.grid(row=1, column=1, padx=5)
-tk.Button(root, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5)
-
-target_button = tk.Button(root, text="Copy Files", command=copy_files)
-target_button.grid(row=4, column=1, pady=10)
-
-output_text = tk.Text(root, height=70, width=70)
-output_text.grid(row=5, columnspan=3, pady=10)
-
-source_entry.bind("Control-KeyRelease-a", select_all)
-target_entry.bind("Control-KeyRelease-a", select_all)
-
-subdirectories_var = tk.BooleanVar()
-empty_subdirectories_var = tk.BooleanVar()
-restartable_mode_var = tk.BooleanVar()
-backup_mode_var = tk.BooleanVar()
-unbuffered_mode_var = tk.BooleanVar()
-efsraw_mode_var = tk.BooleanVar()
-
-options = {
-    "/s": tk.BooleanVar(),
-    "/e": tk.BooleanVar(),
-    "/z": tk.BooleanVar(),
-    "/b": tk.BooleanVar(),
-    "/j": tk.BooleanVar(),
-    "/efsraw": tk.BooleanVar()
-}
-
-checkboxes = {
-    ("Copy Subdirectories", "/s"),
-    ("Copy empty Subdirectories", "/e"),
-    ("Restartable mode", "/z"),
-    ("Backup mode", "/b"),
-    ("Unbuffered Mode (Large Files)", "/j"),
-    ("EFS RAW Mode", "/efsraw"),
-}
-
-for i, (text, option) in enumerate(checkboxes):
-    checkbox = create_checkbox(root, text, options[option])
-    checkbox.grid(row=2 + i//3, column=i%3)
+for method in transfer_methods:
+    ttk.Button(options_frame, text=method, command=lambda m=method: open_window(m)).pack(pady=5)
 
 root.mainloop()
