@@ -3,6 +3,7 @@ import subprocess
 from tkinter import filedialog, messagebox
 from tkinter import ttk
 
+output_text = None
 
 def open_window(method):
     if hasattr(root, 'last window'):
@@ -50,6 +51,7 @@ def copy_files(source_path, target_path, subdirectories, empty_directories, rest
 
 
 def create_robocopy_window(window):
+    global output_text
     tk.Label(window, text="Source:").grid(row=0, column=0, padx=10)
     tk.Label(window, text="Target:").grid(row=1, column=0, pady=10)
 
