@@ -5,17 +5,16 @@ from robocopy_transfer import create_robocopy_window
 from rsync_transfer import create_rsync_window
 
 def open_window(method):
-    if hasattr(root, 'last_window'):
-        root.last_window.destroy()
-    new_window = tk.Toplevel(root)
+    root.destroy()
+    new_window = tk.Toplevel()
     new_window.title(method)
-    root.last_window = new_window
     if method == "SCP":
         create_scp_window(new_window)
     elif method == "Robocopy":
         create_robocopy_window(new_window)
     elif method == "Rsync":
         create_rsync_window(new_window)
+
 
 root = tk.Tk()
 root.title("Kopier v.0.0.0.5-ALPHA")
