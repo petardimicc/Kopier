@@ -19,7 +19,8 @@ def open_window(method):
 
 
 def copy_files(source_path, target_path, username, host, remote_dir, subdirectories, empty_directories,
-               restartable_mode, backup_mode, unbuffered_mode, efsraw_mode, use_scp=False):
+               restartable_mode, backup_mode, unbuffered_mode, efsraw_mode, bandwidth_limit=None, compression=False,
+               port=None, debugging=False, quiet_mode=False, use_scp=False):
     if use_scp and (not source_path or not username or not host or not remote_dir):
         messagebox.showerror("Error", "All fields are required for SCP.")
         return
@@ -27,8 +28,22 @@ def copy_files(source_path, target_path, username, host, remote_dir, subdirector
         messagebox.showerror("Error", "Source and target paths are required for Robocopy.")
         return
 
+    parameters = ""
+
     if use_scp:
-        parameters = "-r" if subdirectories else ""
+        if subdirectories:
+            parameters += "-r "
+        if bandwidth_limit:
+            parameters += f"-l {bandwidth_limit} "
+        if compression:
+            parameters += "-C "
+        if port:
+            parameters += f"-P {port} "
+        if debugging:
+            parameters += "-v "
+        if quiet_mode:
+            parameters += "-q "
+
         try:
             command = ["scp", parameters, source_path, f"{username}@{host}:{remote_dir}"]
             result = subprocess.run(command, capture_output=True, text=True)
@@ -42,7 +57,6 @@ def copy_files(source_path, target_path, username, host, remote_dir, subdirector
         except Exception as e:
             messagebox.showerror("Error", str(e))
     else:
-        parameters = ""
         if subdirectories:
             parameters += "/s "
         if empty_directories:
@@ -152,7 +166,33 @@ def create_scp_window(window):
     output_text = tk.Text(window, height=10, width=50)
     output_text.grid(row=4, columnspan=3, pady=(10, 0))
 
-    tk.Button(window, text="Copy Files", command=lambda: copy_files(source_entry.get(), "", username_entry.get(), host_entry.get(), remote_dir_entry.get(), True, False, False, False, False, False, use_scp=True)).grid(row=5, columnspan=3, pady=10)
+    tk.Label(window, text="Bandwidth Limit (-l):").grid(row=5, column=0, pady=5, sticky=tk.W)
+    bandwidth_limit_var = tk.StringVar()
+    bandwidth_limit_checkbox = tk.Checkbutton(window, text="Enable", variable=bandwidth_limit_var, onvalue="-l", offvalue="", padx=5)
+    bandwidth_limit_checkbox.grid(row=5, column=1, pady=5, sticky=tk.W)
+    bandwidth_limit_entry = tk.Entry(window, width=10)
+    bandwidth_limit_entry.grid(row=5, column=2, pady=5, sticky=tk.W)
+
+    tk.Label(window, text="Compression (-C):").grid(row=6, column=0, pady=5, sticky=tk.W)
+    compression_var = tk.BooleanVar()
+    compression_checkbox = tk.Checkbutton(window, text="Enable", variable=compression_var, onvalue=True, offvalue=False, padx=5)
+    compression_checkbox.grid(row=6, column=1, pady=5, sticky=tk.W)
+
+    tk.Label(window, text="Port (-P):").grid(row=7, column=0, pady=5, sticky=tk.W)
+    port_entry = tk.Entry(window, width=10)
+    port_entry.grid(row=7, column=1, pady=5, sticky=tk.W)
+
+    tk.Label(window, text="Debugging (-V):").grid(row=8, column=0, pady=5, sticky=tk.W)
+    debugging_var = tk.BooleanVar()
+    debugging_checkbox = tk.Checkbutton(window, text="Enable", variable=debugging_var, onvalue=True, offvalue=False, padx=5)
+    debugging_checkbox.grid(row=8, column=1, pady=5, sticky=tk.W)
+
+    tk.Label(window, text="Quiet Mode (-q):").grid(row=9, column=0, pady=5, sticky=tk.W)
+    quiet_mode_var = tk.BooleanVar()
+    quiet_mode_checkbox = tk.Checkbutton(window, text="Enable", variable=quiet_mode_var, onvalue=True, offvalue=False, padx=5)
+    quiet_mode_checkbox.grid(row=9, column=1, pady=5, sticky=tk.W)
+
+    tk.Button(window, text="Copy Files", command=lambda: copy_files(source_entry.get(), "", username_entry.get(), host_entry.get(), remote_dir_entry.get(), True, False, False, False, False, False, bandwidth_limit_entry.get() if bandwidth_limit_var.get() else "", compression_var.get(), port_entry.get(), debugging_var.get(), quiet_mode_var.get(), use_scp=True)).grid(row=10, columnspan=2, pady=10)
 
 
 def browse(directory_entry):
