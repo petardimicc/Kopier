@@ -57,15 +57,15 @@ def create_robocopy_window(window):
     tk.Label(window, text="Target:").grid(row=1, column=0, pady=10, sticky=tk.W)
 
     source_entry = tk.Entry(window, width=50)
-    source_entry.grid(row=0, column=1, padx=5, pady=5)  # Adjusted padding
-    tk.Button(window, text="Browse", command=lambda: browse(source_entry)).grid(row=0, column=2, padx=5, pady=5)  # Adjusted padding
+    source_entry.grid(row=0, column=1, padx=5, pady=5)
+    tk.Button(window, text="Browse", command=lambda: browse(source_entry)).grid(row=0, column=2, padx=5, pady=5)
 
     target_entry = tk.Entry(window, width=50)
-    target_entry.grid(row=1, column=1, padx=5, pady=5)  # Adjusted padding
-    tk.Button(window, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5, pady=5)  # Adjusted padding
+    target_entry.grid(row=1, column=1, padx=5, pady=5)
+    tk.Button(window, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5, pady=5)
 
     output_text = tk.Text(window, height=10, width=50)
-    output_text.grid(row=2, columnspan=3, pady=(10, 0))  # Added top padding
+    output_text.grid(row=2, columnspan=3, pady=(10, 0))
 
     global subdirectories_var, empty_subdirectories_var, restartable_mode_var, backup_mode_var, unbuffered_mode_var, efsraw_mode_var
 
@@ -94,12 +94,12 @@ def create_robocopy_window(window):
         ("EFS RAW Mode", "/efsraw"),
     }
 
-    num_columns = 2  # Number of columns for checkboxes
+    num_columns = 2
     row = 3
     column = 0
     for text, option in checkboxes:
         checkbox = create_checkbox(window, text, options[option])
-        checkbox.grid(row=row, column=column, sticky=tk.W, padx=10, pady=5)  # Adjusted padding
+        checkbox.grid(row=row, column=column, sticky=tk.W, padx=10, pady=5)
         column += 1
         if column >= num_columns:
             column = 0
