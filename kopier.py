@@ -5,8 +5,11 @@ from tkinter import ttk
 
 
 def open_window(method):
+    if hasattr(root, 'last window'):
+        root.last_window.destroy()
     new_window = tk.Toplevel(root)
     new_window.title(method)
+    root.last_window = new_window
     if method == "SCP":
         create_scp_window(new_window)
     elif method == "Robocopy":
@@ -58,11 +61,16 @@ def create_robocopy_window(window):
     target_entry.grid(row=1, column=1, padx=5)
     tk.Button(window, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5)
 
+    target_button = tk.Button(window, text="Copy Files", command=lambda: copy_files(source_entry.get(), target_entry.get(), subdirectories_var.get(), empty_subdirectories_var.get(), restartable_mode_var.get(), backup_mode_var.get(), unbuffered_mode_var.get(), efsraw_mode_var.get()))
+    target_button.grid(row=3, columnspan=3, pady=10)
+
     output_text = tk.Text(window, height=10, width=50)
     output_text.grid(row=4, columnspan=3, pady=10)
 
     source_entry.bind("<Control-KeyRelease-a>", select_all)
     target_entry.bind("<Control-KeyRelease-a>", select_all)
+
+    global subdirectories_var, empty_subdirectories_var, restartable_mode_var, backup_mode_var, unbuffered_mode_var, efsraw_mode_var
 
     subdirectories_var = tk.BooleanVar()
     empty_subdirectories_var = tk.BooleanVar()
@@ -90,17 +98,8 @@ def create_robocopy_window(window):
     }
 
     for i, (text, option) in enumerate(checkboxes):
-        checkbox = tk.Checkbutton(window, text=text, variable=options[option])
+        checkbox = create_checkbox(window, text, options[option])
         checkbox.grid(row=2 + i//3, column=i%2)
-
-    target_button = tk.Button(window, text="Copy Files", command=lambda: copy_files(
-        source_entry.get(), target_entry.get(),
-        subdirectories_var.get(), empty_subdirectories_var.get(),
-        restartable_mode_var.get(), backup_mode_var.get(),
-        unbuffered_mode_var.get(), efsraw_mode_var.get(),
-        output_text=output_text))
-    target_button.grid(row=3, columnspan=3, pady=10)
-
 
 
 def select_all(event):
@@ -137,10 +136,6 @@ def create_checkbox(root, text, var):
 
 
 def create_scp_window(window):
-    pass
-
-
-def create_robocopy_window(window):
     pass
 
 
