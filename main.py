@@ -40,7 +40,7 @@ def on_enter(event):
 
 
 root = tk.Tk()
-root.title("Kopier v.0.0.0.2-ALPHA")
+root.title("Kopier v.0.0.0.3-ALPHA")
 root.geometry("519x241")
 
 source_label = tk.Label(root, text="Source:")
