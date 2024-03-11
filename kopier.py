@@ -1,6 +1,24 @@
 import tkinter as tk
 import subprocess
 from tkinter import filedialog, messagebox
+from tkinter import ttk
+
+
+def open_window(method):
+    new_window = tk.Toplevel(root)
+    new_window.title(method)
+    if method == "SCP":
+        create_scp_window(new_window)
+    elif method == "Robocopy":
+        create_robocopy_window(new_window)
+
+
+def create_scp_window(window):
+    pass
+
+
+def create_robocopy_window(window):\
+    pass
 
 
 def copy_files():
