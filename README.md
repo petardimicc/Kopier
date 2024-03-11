@@ -1,15 +1,16 @@
 # Kopier v0.0.0.3-ALPHA
 
-Small tool that uses robocopy for now to utilize copy of folder from one location to another.
+Kopier is a lightweight utility designed to facilitate the seamless copying of folders from one location to another using the robust functionality of robocopy.
 
-## To-Do
+## To-Do List
 
-1. Support for more commands (cp, adcpmv, rsync, dd, more)
-2. Support for SSH/SFTP
-3. Modern UI
-4. Multithreading
-5. Support windows portable .exe (this is main focus now)
+1. Enhance command support (including cp, adcpmv, rsync, dd, and more)
+2. Implement SSH/SFTP support
+3. Design a modern user interface for improved user experience
+4. Introduce multithreading capabilities to enhance performance
+5. Develop a Windows portable .exe version, prioritizing this as the main focus for now.
 
-This code will probably be bad, since I'm still learning python, don't hate, suggest.
+Please note that this code is a work in progress, as I am still in the process of learning Python. Suggestions for improvement are welcomed.
 
-Happy hunting, Petar Dimic
+Happy coding,
+Petar Dimic
