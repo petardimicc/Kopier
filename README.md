@@ -4,7 +4,7 @@ Kopier is a lightweight utility designed to facilitate the seamless copying of f
 
 ## To-Do List
 
-1. Enhance command support (including cp, adcpmv, rsync, dd, and more)
+1. Enhance command support (including cp, adcpmv, rsync, dd, and borg)
 2. Implement SSH/SFTP support
 3. Design a modern user interface for improved user experience
 4. Introduce multithreading capabilities to enhance performance
