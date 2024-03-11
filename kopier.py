@@ -11,13 +11,30 @@ def open_window(method):
         create_scp_window(new_window)
     elif method == "Robocopy":
         create_robocopy_window(new_window)
+    elif method == "adcpmv":
+        create_adcpmv_window(new_window)
+    elif method == "rsync":
+        create_rsync_window(new_window)
+    elif method == "dd":
+        create_dd_window(new_window)
 
 
 def create_scp_window(window):
     pass
 
 
-def create_robocopy_window(window):\
+def create_robocopy_window(window):
+    pass
+
+
+def create_adcpmv_window(window):
+    pass
+
+
+def create_rsync_window(window):
+    pass
+
+def create_dd_window(window):
     pass
 
 
