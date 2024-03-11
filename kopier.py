@@ -3,7 +3,7 @@ import subprocess
 from tkinter import filedialog, messagebox
 
 
-def on_button_click():
+def copy_files():
     source_path = source_entry.get()
     target_path = target_entry.get()
     parameters = ""
@@ -40,7 +40,18 @@ def browse_target():
 
 
 def on_enter(event):
-    on_button_click()
+    copy_files()
+
+
+def browse(directory_entry):
+    path = filedialog.askdirectory()
+    directory_entry.delete(0, tk.END)
+    directory_entry.insert(0, path)
+
+
+def create_checkbox(root, text, var):
+    checkbox = tk.Checkbutton(root, text=text, variable=var)
+    return checkbox
 
 
 root = tk.Tk()
