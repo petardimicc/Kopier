@@ -16,6 +16,8 @@ def open_window(method):
         create_scp_window(new_window)
     elif method == "Robocopy":
         create_robocopy_window(new_window)
+    elif method == "Rsync":
+        create_rsync_window(new_window)
 
 
 def copy_files(source_path, target_path, username, host, remote_dir, subdirectories, empty_directories,
@@ -28,9 +30,8 @@ def copy_files(source_path, target_path, username, host, remote_dir, subdirector
         messagebox.showerror("Error", "Source and target paths are required for Robocopy.")
         return
 
-    parameters = ""
-
     if use_scp:
+        parameters = ""
         if subdirectories:
             parameters += "-r "
         if bandwidth_limit:
@@ -57,28 +58,17 @@ def copy_files(source_path, target_path, username, host, remote_dir, subdirector
         except Exception as e:
             messagebox.showerror("Error", str(e))
     else:
-        if subdirectories:
-            parameters += "/s "
-        if empty_directories:
-            parameters += "/e "
-        if restartable_mode:
-            parameters += "/z "
-        if backup_mode:
-            parameters += "/b "
-        if unbuffered_mode:
-            parameters += "/j "
-        if efsraw_mode:
-            parameters += "/efsraw "
-        command = f"robocopy {parameters}{source_path} {target_path}"
+        parameters = "-r"
+        command = f"rsync {parameters} {source_path} {target_path}"
         try:
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
             output = result.stdout + result.stderr
             if result.returncode == 0:
                 output_text.insert(tk.END,
-                                   f"Files copied successfully from {source_path} to {target_path} using Robocopy.\n")
+                                   f"Files copied successfully from {source_path} to {target_path} using Rsync.\n")
             else:
                 output_text.insert(tk.END,
-                                   f"Failed to copy files from {source_path} to {target_path} using Robocopy.\n")
+                                   f"Failed to copy files from {source_path} to {target_path} using Rsync.\n")
             output_text.insert(tk.END, output)
         except Exception as e:
             messagebox.showerror("Error?", str(e))
@@ -195,6 +185,26 @@ def create_scp_window(window):
     tk.Button(window, text="Copy Files", command=lambda: copy_files(source_entry.get(), "", username_entry.get(), host_entry.get(), remote_dir_entry.get(), True, False, False, False, False, False, bandwidth_limit_entry.get() if bandwidth_limit_var.get() else "", compression_var.get(), port_entry.get(), debugging_var.get(), quiet_mode_var.get(), use_scp=True)).grid(row=10, columnspan=2, pady=10)
 
 
+def create_rsync_window(window):
+    window.resizable(False, False)
+    global output_text
+    tk.Label(window, text="Source:").grid(row=0, column=0, padx=10, sticky=tk.W)
+    tk.Label(window, text="Target:").grid(row=1, column=0, pady=10, sticky=tk.W)
+
+    source_entry = tk.Entry(window, width=50)
+    source_entry.grid(row=0, column=1, padx=5, pady=5)
+    tk.Button(window, text="Browse", command=lambda: browse(source_entry)).grid(row=0, column=2, padx=5, pady=5)
+
+    target_entry = tk.Entry(window, width=50)
+    target_entry.grid(row=1, column=1, padx=5, pady=5)
+    tk.Button(window, text="Browse", command=lambda: browse(target_entry)).grid(row=1, column=2, padx=5, pady=5)
+
+    output_text = tk.Text(window, height=10, width=50)
+    output_text.grid(row=2, columnspan=3, pady=(10, 0))
+
+    tk.Button(window, text="Copy Files", command=lambda: copy_files(source_entry.get(), target_entry.get(), "", "", "", True, False, False, False, False, False, use_scp=False)).grid(row=3, columnspan=3, pady=10)
+
+
 def browse(directory_entry):
     path = filedialog.askdirectory()
     directory_entry.delete(0, tk.END)
@@ -214,7 +224,7 @@ root.resizable(False, False)
 options_frame = ttk.LabelFrame(root, text="Select Transfer Method")
 options_frame.pack(pady=20)
 
-transfer_methods = ["SCP", "Robocopy"]
+transfer_methods = ["SCP", "Robocopy", "Rsync"]
 
 for method in transfer_methods:
     ttk.Button(options_frame, text=method, command=lambda m=method: open_window(m)).pack(pady=5)
