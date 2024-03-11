@@ -18,7 +18,7 @@ def open_window(method):
         create_rsync_window(new_window)
 
 root = tk.Tk()
-root.title("File Transfer Utility")
+root.title("Kopier v.0.0.0.5-ALPHA")
 root.geometry("400x400")
 root.resizable(False, False)
 
