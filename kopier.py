@@ -55,7 +55,7 @@ def create_checkbox(root, text, var):
 
 
 root = tk.Tk()
-root.title("Kopier v.0.0.0.3-ALPHA")
+root.title("Kopier v.0.0.0.4-ALPHA")
 root.geometry("519x241")
 
 tk.Label(root, text="Source:").grid(row=0, column=0, padx=10)
